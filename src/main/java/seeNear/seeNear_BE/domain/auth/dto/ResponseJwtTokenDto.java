@@ -1,10 +1,10 @@
 package seeNear.seeNear_BE.domain.auth.dto;
 
-public class responseJwtTokenDto {
+public class ResponseJwtTokenDto {
     private String accessToken;
     private String refreshToken;
 
-    public responseJwtTokenDto(String accessToken, String refreshToken) {
+    public ResponseJwtTokenDto(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
