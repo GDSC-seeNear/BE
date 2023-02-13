@@ -2,11 +2,8 @@ package seeNear.seeNear_BE.domain.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import seeNear.seeNear_BE.domain.auth.dto.RequestLoginDto;
-import seeNear.seeNear_BE.domain.auth.dto.RequestPhoneNumberDto;
-import seeNear.seeNear_BE.domain.auth.dto.RequestSignUpDto;
-import seeNear.seeNear_BE.domain.auth.dto.responseJwtTokenDto;
-import seeNear.seeNear_BE.global.sms.dto.CertificationInfo;
+import seeNear.seeNear_BE.domain.Member.domain.Member;
+import seeNear.seeNear_BE.domain.auth.dto.*;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -23,22 +20,26 @@ public class AuthController {
     }
 
     @PostMapping(value="/login")
-    public responseJwtTokenDto login(@RequestBody RequestLoginDto loginInfo){
-        return authService.login(loginInfo.getPhoneNumber(),loginInfo.getRequestId(), loginInfo.getCertificationNumber());
+    public ResponseJwtTokenDto login(@RequestBody RequestCheckCodeDto loginInfo){
+        return authService.login(loginInfo.getPhoneNumber(), loginInfo.getCertificationNumber());
     }
     @PostMapping(value="/signup")
-    public responseJwtTokenDto signUp(@RequestBody RequestSignUpDto signInfo){
+    public ResponseJwtTokenDto signUp(@RequestBody RequestSignUpDto signInfo){
         return authService.signUp(signInfo.getName(),signInfo.getPhoneNumber());
     }
 
     @PostMapping(value="/send")
-    public String sendSmsCode(@RequestBody RequestPhoneNumberDto phoneNumber) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
-        CertificationInfo result = authService.sendSms(phoneNumber.getPhoneNumber());
-        return result.getRequestId();
+    public void sendSmsCode(@RequestBody RequestPhoneNumberDto phoneNumber) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
+        authService.sendSms(phoneNumber.getPhoneNumber());
     }
     @PostMapping(value="/check")
-    public boolean checkSmsCode(@RequestBody CertificationInfo certifiInfo){
-        return authService.checkSms(certifiInfo.getRequestId(),certifiInfo.getCertificationNumber());
+    public ResponseSignUpTokenDto checkSmsCode(@RequestBody RequestCheckCodeDto certifiInfo){
+        return authService.checkSms(certifiInfo.getPhoneNumber(), certifiInfo.getCertificationNumber());
+    }
+
+    @GetMapping(value="/c")
+    public String check(@RequestAttribute("member") Member member){
+        return member.getName();
     }
 
 
