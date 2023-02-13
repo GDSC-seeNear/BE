@@ -7,7 +7,7 @@ public interface AuthRepository {
 
     String findCertificationNum(String requestId);
 
-    void saveToken(String uuid);
+    void saveToken(String uuid,String phoneNumber);
 
     String findToken(String uuid);
 
