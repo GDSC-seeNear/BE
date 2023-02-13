@@ -26,26 +26,17 @@ import java.util.Objects;
 @Service
 @Transactional
 public class NaverSmsService {
-//    @Value("${naver.sms.service_id}")
+    @Value("${naver.sms.service_id}")
     private String serviceId;
-//    @Value("${naver.sms.access_key}")
+    @Value("${naver.sms.access_key}")
     private String accessKey;
-//    @Value("${naver.sms.secret_key}")
+    @Value("${naver.sms.secret_key}")
     private String secretKey;
-//    @Value("${naver.sms.myNumber}")
+    @Value("${naver.sms.myNumber}")
     private String myNumber;
 
-    public NaverSmsService(@Value("${naver.sms.service_id}") String serviceId,
-                           @Value("${naver.sms.access_key}")String accessKey,
-                           @Value("${naver.sms.secret_key}")String secretKey,
-                           @Value("${naver.sms.myNumber}")String myNumber) {
-        this.serviceId = serviceId;
-        this.accessKey = accessKey;
-        this.secretKey = secretKey;
-        this.myNumber = myNumber;
-    }
 
-    public CertificationInfo sendSms(String phoneNumber) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
+    public String sendSms(String phoneNumber) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
         String certificationNumber = RandomStringUtils.randomNumeric(4);
         String content = "SeeNear 인증번호\n"+certificationNumber;
 
@@ -72,9 +63,7 @@ public class NaverSmsService {
                 .bodyToMono(SmsResponseDto.class)
                 .block();
 
-        CertificationInfo certificationInfo = new CertificationInfo(result.getRequestId(),certificationNumber);
-
-        return certificationInfo;
+        return certificationNumber;
     }
 
     public String makeSignature(Long time) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
