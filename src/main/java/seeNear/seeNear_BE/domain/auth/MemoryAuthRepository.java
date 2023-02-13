@@ -10,19 +10,21 @@ public class MemoryAuthRepository implements AuthRepository{
     private static final Map<String,String> store = new HashMap<>();
     private static final Map<String,String> cache = new HashMap<>();
 
+
+
     @Override
-    public void saveCertificationNum(String requestId,String certificationNum){
-        cache.put(requestId,certificationNum);
+    public void saveCertificationNum(String phoneNumber,String certificationNum){
+        cache.put(phoneNumber,certificationNum);
     }
 
     @Override
-    public String findCertificationNum(String requestId){
-        return cache.get(requestId);
+    public String findCertificationNum(String phoneNumber){
+        return cache.get(phoneNumber);
     }
 
     @Override
-    public void saveToken(String uuid) {
-        store.put(uuid,uuid);
+    public void saveToken(String uuid,String token) {
+        store.put(uuid,token);
     }
 
     @Override
