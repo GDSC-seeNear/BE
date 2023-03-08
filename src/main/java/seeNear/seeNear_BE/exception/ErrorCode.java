@@ -12,6 +12,7 @@ public enum ErrorCode {
     MISMATCH_CODE(BAD_REQUEST,"code is not correct"),
     INVALID_TOKEN(BAD_REQUEST,"token is invalid"),
     MISMATCH_INFO(BAD_REQUEST,"There is no data related to request"),
+
     //401
     MEMBER_NOT_FOUND(UNAUTHORIZED,"user is not found"),
     INVALID_TOKEN_INFO(UNAUTHORIZED,"token information is invalid"),
@@ -21,7 +22,6 @@ public enum ErrorCode {
     DUPLICATED_MEMBER(CONFLICT,"user is already existed")
 
     ;
-
 
 
     private final HttpStatus httpStatus;

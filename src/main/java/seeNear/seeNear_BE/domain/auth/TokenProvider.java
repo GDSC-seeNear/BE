@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import seeNear.seeNear_BE.domain.Member.MemberEnum.Role;
 import seeNear.seeNear_BE.domain.auth.dto.ResponseSignUpTokenDto;
 import seeNear.seeNear_BE.domain.auth.dto.ResponseJwtTokenDto;
 import seeNear.seeNear_BE.domain.commonInterface.AuthRepository;
@@ -62,7 +63,7 @@ public class TokenProvider {
         return new ResponseSignUpTokenDto(signUpToken);
     }
 
-    public ResponseJwtTokenDto createLoginToken(Long memberId) {
+    public ResponseJwtTokenDto createLoginToken(int memberId, Role role) {
         UUID uuid = UUID.randomUUID();
         Instant issuedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         Date accessExpiration = Date.from(issuedAt.plus(accessExpired, ChronoUnit.HOURS));
@@ -75,6 +76,7 @@ public class TokenProvider {
                 .setExpiration(accessExpiration) // (4)
                 .claim("id", memberId) // (5)
                 .claim("uuid", uuid.toString())
+                .claim("role", role.name())
                 .signWith(secret, SignatureAlgorithm.HS256) // (6)
                 .compact();
         var refreshToken = Jwts.builder()
@@ -84,6 +86,7 @@ public class TokenProvider {
                 .setExpiration(refreshExpiration) // (4)
                 .claim("id", memberId) // (5)
                 .claim("uuid", uuid.toString())
+                .claim("role", role.name())
                 .signWith(secret,SignatureAlgorithm.HS256) // (6)
                 .compact();
 

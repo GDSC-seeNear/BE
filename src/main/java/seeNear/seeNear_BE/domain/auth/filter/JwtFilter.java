@@ -2,14 +2,13 @@ package seeNear.seeNear_BE.domain.auth.filter;
 
 
 import io.jsonwebtoken.Claims;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import seeNear.seeNear_BE.domain.Member.ElderlyRepository;
+import seeNear.seeNear_BE.domain.Member.GuardianRepository;
+import seeNear.seeNear_BE.domain.Member.MemberEnum.Role;
 import seeNear.seeNear_BE.domain.auth.TokenProvider;
-import seeNear.seeNear_BE.domain.commonInterface.MemberRepository;
 import seeNear.seeNear_BE.domain.Member.domain.Member;
-import seeNear.seeNear_BE.domain.auth.AuthService;
 import seeNear.seeNear_BE.exception.CustomException;
 
 import javax.servlet.FilterChain;
@@ -21,17 +20,20 @@ import java.io.IOException;
 
 import static seeNear.seeNear_BE.exception.ErrorCode.*;
 
-@WebFilter(urlPatterns= "/auth/c")
+@WebFilter(urlPatterns= {"/auth/c","/guardian/*"})
 public class JwtFilter extends OncePerRequestFilter {
 
     static final String AUTHORIZATION_HEADER = "Authorization";
     static final String BEARER_PREFIX = "Bearer ";
 
-    final MemberRepository memberRepository;
+    final ElderlyRepository elderlyRepository;
+    final GuardianRepository guardianRepository;
     final TokenProvider tokenProvider;
 
-    public JwtFilter(MemberRepository memberRepository, TokenProvider tokenProvider) {
-        this.memberRepository = memberRepository;
+    public JwtFilter(ElderlyRepository elderlyRepository, GuardianRepository guardianRepository, TokenProvider tokenProvider) {
+        this.elderlyRepository = elderlyRepository;
+        this.guardianRepository = guardianRepository;
+
         this.tokenProvider = tokenProvider;
     }
 
@@ -45,7 +47,15 @@ public class JwtFilter extends OncePerRequestFilter {
         // 2. validateToken 으로 토큰 유효성 검사
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Claims payload = tokenProvider.getPayload(jwt);
-            Member member = memberRepository.findById((Long) payload.get("id"));
+
+            Member member = null;
+            String memberRole = payload.get("role").toString();
+            if (memberRole.equals(Role.Elderly.name())) {
+                member = elderlyRepository.findById(Integer.parseInt(payload.get("id").toString()));
+            }else if (memberRole.equals(Role.GURDIAN.name())) {
+                member = guardianRepository.findById(Integer.parseInt(payload.get("id").toString()));
+            }
+
             if (member == null) {
                 throw new CustomException(MEMBER_NOT_FOUND,jwt);
             }else{

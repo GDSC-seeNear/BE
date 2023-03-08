@@ -1,12 +1,15 @@
 package seeNear.seeNear_BE.domain.auth;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import seeNear.seeNear_BE.domain.Member.ElderlyRepository;
+import seeNear.seeNear_BE.domain.Member.GuardianRepository;
+import seeNear.seeNear_BE.domain.Member.MemberEnum.Role;
+import seeNear.seeNear_BE.domain.Member.domain.Elderly;
+import seeNear.seeNear_BE.domain.Member.domain.Guardian;
 import seeNear.seeNear_BE.domain.Member.domain.Member;
 import seeNear.seeNear_BE.domain.auth.dto.ResponseSignUpTokenDto;
 import seeNear.seeNear_BE.domain.auth.dto.ResponseJwtTokenDto;
@@ -18,7 +21,6 @@ import seeNear.seeNear_BE.global.sms.NaverSmsService;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
 
 import static seeNear.seeNear_BE.exception.ErrorCode.*;
 
@@ -26,43 +28,63 @@ import static seeNear.seeNear_BE.exception.ErrorCode.*;
 @Service
 @Transactional
 public class AuthService {
-    private final Logger logger = LoggerFactory.getLogger(AuthService.class);
     private final AuthRepository authRepository;
     private final NaverSmsService naverSmsService;
-    private final MemberRepository memberRepository;
+    private final ElderlyRepository elderlyRepository;
+    private final GuardianRepository guardianRepository;
     private final TokenProvider tokenProvider;
 
     @Autowired
     public AuthService(AuthRepository authRepository,
                        NaverSmsService naverSmsService,
-                       MemberRepository memberRepository,
-                       TokenProvider tokenProvider) {
+                       ElderlyRepository elderlyRepository, GuardianRepository guardianRepository, TokenProvider tokenProvider) {
         this.authRepository = authRepository;
         this.naverSmsService = naverSmsService;
-        this.memberRepository = memberRepository;
+        this.elderlyRepository = elderlyRepository;
+        this.guardianRepository = guardianRepository;
         this.tokenProvider = tokenProvider;
     }
 
-    public ResponseJwtTokenDto login(String phoneNumber, String certificationNumber){
+    public ResponseJwtTokenDto login(String phoneNumber, String certificationNumber, Role role){
         ResponseSignUpTokenDto validateCode = checkSms(phoneNumber,certificationNumber);
         if (!StringUtils.hasText(validateCode.getSignUpToken())){
             throw new CustomException(MISMATCH_CODE,certificationNumber);
         }
-        Member member = memberRepository.findByPhoneNumber(phoneNumber);
+
+        Member member=null;
+        if (role.equals(Role.Elderly)) {
+            member = elderlyRepository.findByPhoneNumber(phoneNumber);
+        } else if (role.equals(Role.GURDIAN)) {
+            member = guardianRepository.findByPhoneNumber(phoneNumber);
+        }
+
         if(member== null) {
             throw new CustomException(MEMBER_NOT_FOUND,phoneNumber);
         }
-        return tokenProvider.createLoginToken(member.getId());
+        return tokenProvider.createLoginToken(member.getId(),role);
     }
 
-    public ResponseJwtTokenDto signUp(String name, String phoneNumber){
-        Member member = memberRepository.findByPhoneNumber(phoneNumber);
-        if(member!= null) {
-            throw new CustomException(DUPLICATED_MEMBER,name+"/"+phoneNumber);
+    public ResponseJwtTokenDto signUp(String name, String phoneNumber, Role role){
+        Member member=null;
+        Member saved=null;
+
+        if (role.equals(Role.Elderly)) {
+            member = elderlyRepository.findByPhoneNumber(phoneNumber);
+            if(member!= null) {
+                throw new CustomException(DUPLICATED_MEMBER,name+"/"+phoneNumber);
+            }
+            Elderly createdElderly = new Elderly(phoneNumber,name);
+            saved = elderlyRepository.save(createdElderly);
+        } else if (role.equals(Role.GURDIAN)) {
+            member = guardianRepository.findByPhoneNumber(phoneNumber);
+            if(member!= null) {
+                throw new CustomException(DUPLICATED_MEMBER,name+"/"+phoneNumber);
+            }
+            Guardian createdGuardian = new Guardian(phoneNumber,name);
+            saved = guardianRepository.save(createdGuardian);
         }
-        Member savedMember = new Member(new Random().nextLong(),name,phoneNumber);
-        memberRepository.save(savedMember);
-        return tokenProvider.createLoginToken(savedMember.getId());
+
+        return tokenProvider.createLoginToken(saved.getId(),role);
     }
 
     public ResponseSignUpTokenDto checkSms(String phoneNumber, String certificationNumber){
@@ -73,6 +95,7 @@ public class AuthService {
                 return tokenProvider.createSignUpToken(phoneNumber);
             }
         } else{
+            //아예 저장 정보가 없음
             throw new CustomException(MISMATCH_INFO,phoneNumber+"/"+certificationNumber);
         }
         throw new CustomException(MISMATCH_CODE,certificationNumber);
@@ -80,6 +103,7 @@ public class AuthService {
 
     public void sendSms(String phoneNumber) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
         String certificationNumber = naverSmsService.sendSms(phoneNumber);
+        //이미 보낸 내역 있으면 삭제 로직 추가
         authRepository.saveCertificationNum(phoneNumber,certificationNumber);
     }
 

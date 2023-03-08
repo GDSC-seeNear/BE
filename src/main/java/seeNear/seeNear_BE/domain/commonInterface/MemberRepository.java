@@ -1,14 +1,16 @@
 package seeNear.seeNear_BE.domain.commonInterface;
 
+import seeNear.seeNear_BE.domain.Member.domain.Elderly;
 import seeNear.seeNear_BE.domain.Member.domain.Member;
 
 import java.util.Map;
+import java.util.Optional;
 
 public interface MemberRepository {
 
-    Member save(Member member);
+    Elderly save(Elderly Elderly);
 
-    Member findById(Long memberId);
+    Elderly findById(int ElderlyId);
 
-    Member findByPhoneNumber(String phoneNumber);
+    Elderly findByPhoneNumber(String phoneNumber);
 }

@@ -2,6 +2,9 @@ package seeNear.seeNear_BE.domain.auth.filter;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.util.StringUtils;
+import seeNear.seeNear_BE.domain.Member.ElderlyRepository;
+
+import seeNear.seeNear_BE.domain.Member.GuardianRepository;
 import seeNear.seeNear_BE.domain.Member.domain.Member;
 import seeNear.seeNear_BE.domain.auth.TokenProvider;
 import seeNear.seeNear_BE.domain.commonInterface.AuthRepository;
@@ -19,12 +22,12 @@ import java.util.Objects;
 import static seeNear.seeNear_BE.exception.ErrorCode.INVALID_TOKEN_INFO;
 import static seeNear.seeNear_BE.exception.ErrorCode.MEMBER_NOT_FOUND;
 
-@WebFilter(urlPatterns= "/auth/signup")
+@WebFilter(urlPatterns= {"/auth/elderly/signup","/auth/guardian/signup"})
 public class SignUpFilter extends JwtFilter{
     AuthRepository authRepository;
 
-    public SignUpFilter(MemberRepository memberRepository, TokenProvider tokenProvider, AuthRepository authRepository) {
-        super(memberRepository, tokenProvider);
+    public SignUpFilter(seeNear.seeNear_BE.domain.Member.ElderlyRepository elderlyRepository, GuardianRepository guardianRepository, TokenProvider tokenProvider, AuthRepository authRepository) {
+        super(elderlyRepository, guardianRepository,tokenProvider);
         this.authRepository = authRepository;
     }
 
@@ -41,14 +44,9 @@ public class SignUpFilter extends JwtFilter{
             //에러 걸어주기
 
             if (phoneNumber != null) {
-                System.out.println(phoneNumber);
-                System.out.println(payload.get("phoneNumber").toString());
                 //보낸 정보랑 맞는지 확인해야댐
                 request.setAttribute("phoneNumber",phoneNumber);
             }else{
-                System.out.println(phoneNumber);
-                System.out.println(payload.get("phoneNumber").toString());
-                System.out.println((Objects.equals(payload.get("phoneNumber").toString(), phoneNumber)));
                 throw new CustomException(INVALID_TOKEN_INFO,jwt);
             }
 
