@@ -14,7 +14,6 @@ import seeNear.seeNear_BE.domain.Member.domain.Member;
 import seeNear.seeNear_BE.domain.auth.dto.ResponseSignUpTokenDto;
 import seeNear.seeNear_BE.domain.auth.dto.ResponseJwtTokenDto;
 import seeNear.seeNear_BE.domain.commonInterface.AuthRepository;
-import seeNear.seeNear_BE.domain.commonInterface.MemberRepository;
 import seeNear.seeNear_BE.exception.CustomException;
 import seeNear.seeNear_BE.global.sms.NaverSmsService;
 
@@ -65,7 +64,7 @@ public class AuthService {
     }
 
     public ResponseJwtTokenDto signUp(String name, String phoneNumber, Role role){
-        Member member=null;
+        Member member;
         Member saved=null;
 
         if (role.equals(Role.Elderly)) {

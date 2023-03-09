@@ -11,7 +11,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @Data
 @Entity
-public class Elderly extends Member{
+public class Elderly implements Member{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

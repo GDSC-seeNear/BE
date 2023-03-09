@@ -2,13 +2,10 @@ package seeNear.seeNear_BE.domain.auth.filter;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.util.StringUtils;
-import seeNear.seeNear_BE.domain.Member.ElderlyRepository;
 
 import seeNear.seeNear_BE.domain.Member.GuardianRepository;
-import seeNear.seeNear_BE.domain.Member.domain.Member;
 import seeNear.seeNear_BE.domain.auth.TokenProvider;
 import seeNear.seeNear_BE.domain.commonInterface.AuthRepository;
-import seeNear.seeNear_BE.domain.commonInterface.MemberRepository;
 import seeNear.seeNear_BE.exception.CustomException;
 
 import javax.servlet.FilterChain;
@@ -17,10 +14,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Objects;
 
 import static seeNear.seeNear_BE.exception.ErrorCode.INVALID_TOKEN_INFO;
-import static seeNear.seeNear_BE.exception.ErrorCode.MEMBER_NOT_FOUND;
 
 @WebFilter(urlPatterns= {"/auth/elderly/signup","/auth/guardian/signup"})
 public class SignUpFilter extends JwtFilter{

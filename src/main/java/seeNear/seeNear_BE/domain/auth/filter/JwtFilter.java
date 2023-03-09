@@ -7,8 +7,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import seeNear.seeNear_BE.domain.Member.ElderlyRepository;
 import seeNear.seeNear_BE.domain.Member.GuardianRepository;
 import seeNear.seeNear_BE.domain.Member.MemberEnum.Role;
-import seeNear.seeNear_BE.domain.auth.TokenProvider;
 import seeNear.seeNear_BE.domain.Member.domain.Member;
+import seeNear.seeNear_BE.domain.auth.TokenProvider;
 import seeNear.seeNear_BE.exception.CustomException;
 
 import javax.servlet.FilterChain;
@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import static seeNear.seeNear_BE.exception.ErrorCode.*;
 
-@WebFilter(urlPatterns= {"/auth/c","/guardian/*"})
+@WebFilter(urlPatterns= {"/guardian/*","/elderly/*"})
 public class JwtFilter extends OncePerRequestFilter {
 
     static final String AUTHORIZATION_HEADER = "Authorization";
@@ -60,7 +60,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 throw new CustomException(MEMBER_NOT_FOUND,jwt);
             }else{
                 request.setAttribute("member",member);
-                System.out.println(request.getAttribute("member"));
             }
 
         }
