@@ -12,7 +12,7 @@ import seeNear.seeNear_BE.domain.auth.dto.RequestCheckCodeDto;
 @RequestMapping("/guardian")
 public class GuardianController {
 
-    private GuardianService guardianService;
+    private final GuardianService guardianService;
     @Autowired
     public GuardianController(GuardianService guardianService) {
         this.guardianService = guardianService;

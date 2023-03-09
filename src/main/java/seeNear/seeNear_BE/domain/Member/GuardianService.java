@@ -1,6 +1,7 @@
 package seeNear.seeNear_BE.domain.Member;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import seeNear.seeNear_BE.domain.Member.domain.Elderly;
@@ -15,10 +16,10 @@ import static seeNear.seeNear_BE.exception.ErrorCode.*;
 public class GuardianService {
 
     private final ModelMapper modelMapper = new ModelMapper();
-    private ElderlyRepository elderlyRepository;
-    private GuardianRepository guardianRepository;
-    private AuthService authService;
-
+    private final ElderlyRepository elderlyRepository;
+    private final GuardianRepository guardianRepository;
+    private final AuthService authService;
+    @Autowired
     public GuardianService(ElderlyRepository elderlyRepository, GuardianRepository guardianRepository, AuthService authService){
         this.elderlyRepository = elderlyRepository;
         this.guardianRepository = guardianRepository;
@@ -42,6 +43,7 @@ public class GuardianService {
             throw new CustomException(MISMATCH_CODE,certificationNumber);
         }
         Elderly elderly = elderlyRepository.findByPhoneNumber(phoneNumber);
+
         if(elderly== null) {
             throw new CustomException(MEMBER_NOT_FOUND,phoneNumber);
         }
