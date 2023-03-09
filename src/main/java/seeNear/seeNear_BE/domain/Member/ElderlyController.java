@@ -1,11 +1,9 @@
 package seeNear.seeNear_BE.domain.Member;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import seeNear.seeNear_BE.domain.Member.domain.Elderly;
+import seeNear.seeNear_BE.domain.Member.domain.Member;
 
 @RestController
 @RequestMapping("/elderly")
@@ -15,6 +13,11 @@ public class ElderlyController {
     @Autowired
     public ElderlyController(ElderlyService elderlyService) {
         this.elderlyService = elderlyService;
+    }
+
+    @GetMapping(value="/me")
+    public Member getElderly(@RequestAttribute("member") Member member){
+        return member;
     }
 
     @PatchMapping(value="/update/{id}")
