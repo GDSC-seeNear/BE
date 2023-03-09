@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,4 +22,5 @@ public class RequestElderly {
     private String addressDetail;
     private Boolean isConnect;
     private Integer guardianId;
+    private List<String> emergencyPhoneNumber;
 }

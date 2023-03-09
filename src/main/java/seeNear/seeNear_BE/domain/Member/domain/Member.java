@@ -1,6 +1,7 @@
 package seeNear.seeNear_BE.domain.Member.domain;
 
 import java.sql.Date;
+import java.util.List;
 
 public interface Member {
     int id = 0;
@@ -13,6 +14,8 @@ public interface Member {
     String addressDetail = null;
     Boolean isConnect = null;
     Integer guardianId = null;
+
+    List<String> emergencyPhoneNumber = null;
 
     int getId();
 
