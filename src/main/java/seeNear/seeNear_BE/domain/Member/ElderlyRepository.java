@@ -40,6 +40,14 @@ public class ElderlyRepository {
         return elderly.size() ==1 ? elderly.get(0) : null;
     }
 
+    public List<Elderly> findByGuardianId(int guardianId) {
+        List<Elderly> elderly = em.createQuery("select e from Elderly e where e.guardianId = :guardianId", Elderly.class)
+                .setParameter("guardianId",guardianId)
+                .getResultList();
+
+        return elderly;
+    }
+
     public Elderly update(Elderly elderly) {
         Elderly newElderly = em.merge(elderly);
 
