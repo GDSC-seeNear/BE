@@ -18,6 +18,9 @@ public enum ErrorCode {
     INVALID_TOKEN_INFO(UNAUTHORIZED,"token information is invalid"),
     HEADER_TOKEN_NOT_FOUND(UNAUTHORIZED,"token is not found in Bearer authorization header"),
 
+    //403
+    INVALID_AUTHORITY(FORBIDDEN,"user is not authorized"),
+
     //409
     DUPLICATED_MEMBER(CONFLICT,"user is already existed")
 
