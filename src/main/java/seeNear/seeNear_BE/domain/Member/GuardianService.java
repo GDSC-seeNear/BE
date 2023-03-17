@@ -10,6 +10,8 @@ import seeNear.seeNear_BE.domain.auth.AuthService;
 import seeNear.seeNear_BE.domain.auth.dto.ResponseSignUpTokenDto;
 import seeNear.seeNear_BE.exception.CustomException;
 
+import java.util.List;
+
 import static seeNear.seeNear_BE.exception.ErrorCode.*;
 
 @Service
@@ -27,10 +29,27 @@ public class GuardianService {
 
     }
 
+    public Elderly getOneManagedElderly(int elderlyId,int guardianId) {
+        Elderly elderly = elderlyRepository.findById(elderlyId);
+
+        if (elderly == null) {
+            throw new CustomException(MEMBER_NOT_FOUND, String.format("request elderly id: %d", elderlyId));
+        }
+        if (!elderly.getIsConnect() || elderly.getGuardianId() != guardianId) {
+            throw new CustomException(INVALID_AUTHORITY, String.format("user id: %d 와 elderly의 guardianId 이 같지 않습니다", guardianId));
+        }
+        return elderly;
+    }
+
+
+    public List<Elderly> getManagedElderly(int guardianId) {
+        return elderlyRepository.findByGuardianId(guardianId);
+    }
+
     public Elderly resisterElderly(RequestElderly updateInfo, int guardianId) {
         if (guardianId != updateInfo.getGuardianId()) {
-            throw new CustomException(INVALID_TOKEN_INFO,
-                    String.format("token_value: %d  request_value: %d", guardianId,updateInfo.getGuardianId()));
+            throw new CustomException(INVALID_AUTHORITY,
+                    String.format("user value: %d  request value: %d", guardianId,updateInfo.getGuardianId()));
         }
 
         Elderly elderly = modelMapper.map(updateInfo, Elderly.class);
@@ -38,12 +57,8 @@ public class GuardianService {
     }
 
     public Elderly checkResister(String phoneNumber, String certificationNumber) {
-        ResponseSignUpTokenDto validateCode = authService.checkSms(phoneNumber,certificationNumber);
-        if (!StringUtils.hasText(validateCode.getSignUpToken())){
-            throw new CustomException(MISMATCH_CODE,certificationNumber);
-        }
+        authService.checkSms(phoneNumber,certificationNumber);
         Elderly elderly = elderlyRepository.findByPhoneNumber(phoneNumber);
-
         if(elderly== null) {
             throw new CustomException(MEMBER_NOT_FOUND,phoneNumber);
         }
