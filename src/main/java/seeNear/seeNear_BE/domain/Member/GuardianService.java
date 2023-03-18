@@ -51,6 +51,9 @@ public class GuardianService {
             throw new CustomException(INVALID_AUTHORITY,
                     String.format("user value: %d  request value: %d", guardianId,updateInfo.getGuardianId()));
         }
+        if (elderlyRepository.findById(updateInfo.getId()) == null) {
+            throw new CustomException(MEMBER_NOT_FOUND, String.format("request elderly id: %d", updateInfo.getId()));
+        }
 
         Elderly elderly = modelMapper.map(updateInfo, Elderly.class);
         return elderlyRepository.update(elderly);
