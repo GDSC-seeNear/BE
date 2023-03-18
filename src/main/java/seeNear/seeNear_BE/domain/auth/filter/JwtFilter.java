@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import static seeNear.seeNear_BE.exception.ErrorCode.*;
 
-@WebFilter(urlPatterns= {"/guardian/*","/elderly/*"})
+@WebFilter(urlPatterns= {"/guardian/*","/elderly/*","/medicine/*"})
 public class JwtFilter extends OncePerRequestFilter {
 
     static final String AUTHORIZATION_HEADER = "Authorization";
@@ -49,10 +49,11 @@ public class JwtFilter extends OncePerRequestFilter {
             Claims payload = tokenProvider.getPayload(jwt);
 
             Member member = null;
-            String memberRole = payload.get("role").toString();
-            if (memberRole.equals(Role.Elderly.name())) {
+            var memberRole = payload.get("role",String.class);
+
+            if (memberRole.equals(Role.ELDERLY.toString())) {
                 member = elderlyRepository.findById(Integer.parseInt(payload.get("id").toString()));
-            }else if (memberRole.equals(Role.GURDIAN.name())) {
+            }else if (memberRole.equals(Role.GURDIAN.toString())) {
                 member = guardianRepository.findById(Integer.parseInt(payload.get("id").toString()));
             }
 
@@ -60,6 +61,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 throw new CustomException(MEMBER_NOT_FOUND,jwt);
             }else{
                 request.setAttribute("member",member);
+                request.setAttribute("role",memberRole);
             }
 
         }
