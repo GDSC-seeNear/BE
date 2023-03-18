@@ -18,6 +18,11 @@ public class MemoryAuthRepository implements AuthRepository{
     }
 
     @Override
+    public void deleteCertificationNum(String phoneNumber){
+        cache.remove(phoneNumber);
+    }
+
+    @Override
     public String findCertificationNum(String phoneNumber){
         return cache.get(phoneNumber);
     }

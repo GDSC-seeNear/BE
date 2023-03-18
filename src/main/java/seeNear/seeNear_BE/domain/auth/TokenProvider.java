@@ -76,7 +76,7 @@ public class TokenProvider {
                 .setExpiration(accessExpiration) // (4)
                 .claim("id", memberId) // (5)
                 .claim("uuid", uuid.toString())
-                .claim("role", role.name())
+                .claim("role", role.toString())
                 .signWith(secret, SignatureAlgorithm.HS256) // (6)
                 .compact();
         var refreshToken = Jwts.builder()
@@ -86,11 +86,11 @@ public class TokenProvider {
                 .setExpiration(refreshExpiration) // (4)
                 .claim("id", memberId) // (5)
                 .claim("uuid", uuid.toString())
-                .claim("role", role.name())
+                .claim("role", role.toString())
                 .signWith(secret,SignatureAlgorithm.HS256) // (6)
                 .compact();
 
-
+        authRepository.saveToken(uuid.toString(),refreshToken);
         return new ResponseJwtTokenDto(accessToken,refreshToken);
     }
 

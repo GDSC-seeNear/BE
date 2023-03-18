@@ -51,7 +51,7 @@ public class AuthService {
         }
 
         Member member=null;
-        if (role.equals(Role.Elderly)) {
+        if (role.equals(Role.ELDERLY)) {
             member = elderlyRepository.findByPhoneNumber(phoneNumber);
         } else if (role.equals(Role.GURDIAN)) {
             member = guardianRepository.findByPhoneNumber(phoneNumber);
@@ -67,7 +67,7 @@ public class AuthService {
         Member member;
         Member saved=null;
 
-        if (role.equals(Role.Elderly)) {
+        if (role.equals(Role.ELDERLY)) {
             member = elderlyRepository.findByPhoneNumber(phoneNumber);
             if(member!= null) {
                 throw new CustomException(DUPLICATED_MEMBER,name+"/"+phoneNumber);
@@ -107,4 +107,8 @@ public class AuthService {
     }
 
 
+    public ResponseJwtTokenDto refresh(int id, String role) {
+        Role newRole = role == "ELDERLY" ? Role.ELDERLY : Role.GURDIAN;
+        return tokenProvider.createLoginToken(id,newRole);
+    }
 }
