@@ -1,16 +1,14 @@
-package seeNear.seeNear_BE.domain.auth.filter;
+package seeNear.seeNear_BE.domain.Auth.filter;
 
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import seeNear.seeNear_BE.domain.Member.ElderlyRepository;
 import seeNear.seeNear_BE.domain.Member.GuardianRepository;
 import seeNear.seeNear_BE.domain.Member.MemberEnum.Role;
-import seeNear.seeNear_BE.domain.Member.domain.Elderly;
-import seeNear.seeNear_BE.domain.Member.domain.Guardian;
 import seeNear.seeNear_BE.domain.Member.domain.Member;
-import seeNear.seeNear_BE.domain.auth.MemoryAuthRepository;
-import seeNear.seeNear_BE.domain.auth.TokenProvider;
-import seeNear.seeNear_BE.domain.auth.dto.ResponseJwtTokenDto;
+import seeNear.seeNear_BE.domain.Auth.MemoryAuthRepository;
+import seeNear.seeNear_BE.domain.Auth.TokenProvider;
 import seeNear.seeNear_BE.exception.CustomException;
 
 import javax.servlet.FilterChain;
@@ -19,12 +17,9 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-
-import com.google.gson.Gson;
 
 import static seeNear.seeNear_BE.exception.ErrorCode.*;
-
+@Slf4j
 @WebFilter(urlPatterns= {"/auth/refresh"})
 public class RefreshFilter extends JwtFilter{
     private final MemoryAuthRepository memoryAuthRepository;
@@ -47,7 +42,6 @@ public class RefreshFilter extends JwtFilter{
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         // 1. Request Header 에서 토큰을 꺼냄
         String jwt = super.getToken(request);
 
@@ -56,16 +50,18 @@ public class RefreshFilter extends JwtFilter{
             Claims payload = tokenProvider.getPayload(jwt);
             String uuid = payload.get("uuid", String.class);
 
+
             if (memoryAuthRepository.findToken(uuid) == null) {
-                throw new CustomException(MISMATCH_INFO,"refreshToken이 존재하지 않습니다");
+                throw new CustomException(MISMATCH_INFO,"refreshToken is not exist");
             }
 
             Member member = null;
-            var memberRole = payload.get("role",String.class);
+            var role = payload.get("role",String.class);
+            Role memberRole = Enum.valueOf(Role.class, role);
 
-            if (memberRole.equals(Role.ELDERLY.toString())) {
+            if (memberRole.equals(Role.ELDERLY)) {
                 member = elderlyRepository.findById(Integer.parseInt(payload.get("id").toString()));
-            }else if (memberRole.equals(Role.GURDIAN.toString())) {
+            }else if (memberRole.equals(Role.GURDIAN)) {
                 member = guardianRepository.findById(Integer.parseInt(payload.get("id").toString()));
             }else {
                 throw new CustomException(INVALID_TOKEN_INFO, "토큰 정보가 올바르지 않습니다");
