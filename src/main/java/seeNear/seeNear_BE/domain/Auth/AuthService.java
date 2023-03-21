@@ -1,4 +1,4 @@
-package seeNear.seeNear_BE.domain.auth;
+package seeNear.seeNear_BE.domain.Auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,11 +11,11 @@ import seeNear.seeNear_BE.domain.Member.MemberEnum.Role;
 import seeNear.seeNear_BE.domain.Member.domain.Elderly;
 import seeNear.seeNear_BE.domain.Member.domain.Guardian;
 import seeNear.seeNear_BE.domain.Member.domain.Member;
-import seeNear.seeNear_BE.domain.auth.dto.ResponseSignUpTokenDto;
-import seeNear.seeNear_BE.domain.auth.dto.ResponseJwtTokenDto;
-import seeNear.seeNear_BE.domain.commonInterface.AuthRepository;
+import seeNear.seeNear_BE.domain.Auth.dto.ResponseSignUpTokenDto;
+import seeNear.seeNear_BE.domain.Auth.dto.ResponseJwtTokenDto;
+import seeNear.seeNear_BE.domain.Auth.Interface.AuthRepository;
 import seeNear.seeNear_BE.exception.CustomException;
-import seeNear.seeNear_BE.global.sms.NaverSmsService;
+import seeNear.seeNear_BE.global.infra.sms.NaverSmsService;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -107,8 +107,7 @@ public class AuthService {
     }
 
 
-    public ResponseJwtTokenDto refresh(int id, String role) {
-        Role newRole = role == "ELDERLY" ? Role.ELDERLY : Role.GURDIAN;
-        return tokenProvider.createLoginToken(id,newRole);
+    public ResponseJwtTokenDto refresh(int id, Role role) {
+        return tokenProvider.createLoginToken(id,role);
     }
 }

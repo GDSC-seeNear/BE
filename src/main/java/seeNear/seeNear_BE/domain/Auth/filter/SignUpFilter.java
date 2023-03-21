@@ -1,11 +1,11 @@
-package seeNear.seeNear_BE.domain.auth.filter;
+package seeNear.seeNear_BE.domain.Auth.filter;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.util.StringUtils;
 
 import seeNear.seeNear_BE.domain.Member.GuardianRepository;
-import seeNear.seeNear_BE.domain.auth.TokenProvider;
-import seeNear.seeNear_BE.domain.commonInterface.AuthRepository;
+import seeNear.seeNear_BE.domain.Auth.TokenProvider;
+import seeNear.seeNear_BE.domain.Auth.Interface.AuthRepository;
 import seeNear.seeNear_BE.exception.CustomException;
 
 import javax.servlet.FilterChain;

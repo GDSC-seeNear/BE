@@ -6,7 +6,7 @@ import seeNear.seeNear_BE.domain.Member.domain.Elderly;
 import seeNear.seeNear_BE.domain.Member.domain.Guardian;
 import seeNear.seeNear_BE.domain.Member.domain.Member;
 import seeNear.seeNear_BE.domain.Member.dto.RequestElderly;
-import seeNear.seeNear_BE.domain.auth.dto.RequestCheckCodeDto;
+import seeNear.seeNear_BE.domain.Auth.dto.RequestCheckCodeDto;
 
 import java.util.List;
 

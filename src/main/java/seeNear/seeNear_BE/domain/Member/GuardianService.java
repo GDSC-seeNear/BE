@@ -3,11 +3,9 @@ package seeNear.seeNear_BE.domain.Member;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import seeNear.seeNear_BE.domain.Member.domain.Elderly;
 import seeNear.seeNear_BE.domain.Member.dto.RequestElderly;
-import seeNear.seeNear_BE.domain.auth.AuthService;
-import seeNear.seeNear_BE.domain.auth.dto.ResponseSignUpTokenDto;
+import seeNear.seeNear_BE.domain.Auth.AuthService;
 import seeNear.seeNear_BE.exception.CustomException;
 
 import java.util.List;

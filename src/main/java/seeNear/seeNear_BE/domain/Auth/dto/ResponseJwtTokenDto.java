@@ -1,4 +1,4 @@
-package seeNear.seeNear_BE.domain.auth.dto;
+package seeNear.seeNear_BE.domain.Auth.dto;
 
 public class ResponseJwtTokenDto {
     private String accessToken;

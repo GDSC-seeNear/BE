@@ -7,5 +7,4 @@ public class RequestCreateMedicineDto {
     private String name;
     private int elderlyId;
     private int period;
-
 }

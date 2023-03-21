@@ -1,6 +1,7 @@
 package seeNear.seeNear_BE.domain.Member;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Transactional
 public class ElderlyRepository {
     private final EntityManager em;
+    @Autowired
     public ElderlyRepository(EntityManager em) {
         this.em = em;
     }

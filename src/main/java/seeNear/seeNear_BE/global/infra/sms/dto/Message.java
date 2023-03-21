@@ -1,4 +1,4 @@
-package seeNear.seeNear_BE.global.sms.dto;
+package seeNear.seeNear_BE.global.infra.sms.dto;
 
 public class Message {
     private String to;

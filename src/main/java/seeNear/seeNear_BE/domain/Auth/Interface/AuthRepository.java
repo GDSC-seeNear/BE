@@ -1,4 +1,4 @@
-package seeNear.seeNear_BE.domain.commonInterface;
+package seeNear.seeNear_BE.domain.Auth.Interface;
 
 
 public interface AuthRepository {

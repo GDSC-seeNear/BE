@@ -1,7 +1,7 @@
-package seeNear.seeNear_BE.domain.auth;
+package seeNear.seeNear_BE.domain.Auth;
 
 import org.springframework.stereotype.Repository;
-import seeNear.seeNear_BE.domain.commonInterface.AuthRepository;
+import seeNear.seeNear_BE.domain.Auth.Interface.AuthRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +34,7 @@ public class MemoryAuthRepository implements AuthRepository{
 
     @Override
     public String findToken(String uuid) {
+        System.out.println(store);
         return store.get(uuid);
     }
 

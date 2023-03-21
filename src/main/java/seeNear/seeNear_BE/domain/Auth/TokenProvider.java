@@ -1,4 +1,4 @@
-package seeNear.seeNear_BE.domain.auth;
+package seeNear.seeNear_BE.domain.Auth;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import seeNear.seeNear_BE.domain.Member.MemberEnum.Role;
-import seeNear.seeNear_BE.domain.auth.dto.ResponseSignUpTokenDto;
-import seeNear.seeNear_BE.domain.auth.dto.ResponseJwtTokenDto;
-import seeNear.seeNear_BE.domain.commonInterface.AuthRepository;
+import seeNear.seeNear_BE.domain.Auth.dto.ResponseSignUpTokenDto;
+import seeNear.seeNear_BE.domain.Auth.dto.ResponseJwtTokenDto;
+import seeNear.seeNear_BE.domain.Auth.Interface.AuthRepository;
 import seeNear.seeNear_BE.exception.CustomException;
 
 import javax.annotation.PostConstruct;
@@ -76,7 +76,7 @@ public class TokenProvider {
                 .setExpiration(accessExpiration) // (4)
                 .claim("id", memberId) // (5)
                 .claim("uuid", uuid.toString())
-                .claim("role", role.toString())
+                .claim("role", role)
                 .signWith(secret, SignatureAlgorithm.HS256) // (6)
                 .compact();
         var refreshToken = Jwts.builder()
@@ -86,7 +86,7 @@ public class TokenProvider {
                 .setExpiration(refreshExpiration) // (4)
                 .claim("id", memberId) // (5)
                 .claim("uuid", uuid.toString())
-                .claim("role", role.toString())
+                .claim("role", role)
                 .signWith(secret,SignatureAlgorithm.HS256) // (6)
                 .compact();
 

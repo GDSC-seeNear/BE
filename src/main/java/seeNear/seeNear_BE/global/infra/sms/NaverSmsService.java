@@ -1,4 +1,4 @@
-package seeNear.seeNear_BE.global.sms;
+package seeNear.seeNear_BE.global.infra.sms;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -6,22 +6,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-import seeNear.seeNear_BE.global.sms.dto.CertificationInfo;
-import seeNear.seeNear_BE.global.sms.dto.Message;
-import seeNear.seeNear_BE.global.sms.dto.SmsRequestDto;
-import seeNear.seeNear_BE.global.sms.dto.SmsResponseDto;
+import seeNear.seeNear_BE.global.infra.sms.dto.Message;
+import seeNear.seeNear_BE.global.infra.sms.dto.SmsRequestDto;
+import seeNear.seeNear_BE.global.infra.sms.dto.SmsResponseDto;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -38,7 +34,7 @@ public class NaverSmsService {
 
     public String sendSms(String phoneNumber) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
         String certificationNumber = RandomStringUtils.randomNumeric(4);
-        String content = "SeeNear 인증번호\n"+certificationNumber;
+        String content = String.format("[SeeNear 본인확인]%n인증번호 [%s]를 입력해주세요.",certificationNumber);
 
         List<Message> messages = new ArrayList<>();
         messages.add(new Message(phoneNumber,content));

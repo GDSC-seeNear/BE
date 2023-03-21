@@ -1,4 +1,4 @@
-package seeNear.seeNear_BE.global.sms.dto;
+package seeNear.seeNear_BE.global.infra.sms.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
