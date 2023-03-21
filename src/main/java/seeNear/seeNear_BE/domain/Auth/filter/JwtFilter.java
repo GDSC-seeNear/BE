@@ -1,4 +1,4 @@
-package seeNear.seeNear_BE.domain.auth.filter;
+package seeNear.seeNear_BE.domain.Auth.filter;
 
 
 import io.jsonwebtoken.Claims;
@@ -8,19 +8,18 @@ import seeNear.seeNear_BE.domain.Member.ElderlyRepository;
 import seeNear.seeNear_BE.domain.Member.GuardianRepository;
 import seeNear.seeNear_BE.domain.Member.MemberEnum.Role;
 import seeNear.seeNear_BE.domain.Member.domain.Member;
-import seeNear.seeNear_BE.domain.auth.TokenProvider;
+import seeNear.seeNear_BE.domain.Auth.TokenProvider;
 import seeNear.seeNear_BE.exception.CustomException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static seeNear.seeNear_BE.exception.ErrorCode.*;
 
-@WebFilter(urlPatterns= {"/guardian/*","/elderly/*","/medicine/*"})
+//@WebFilter(urlPatterns= {"/guardian/*","/elderly/*","/medicine/*"})
 public class JwtFilter extends OncePerRequestFilter {
 
     static final String AUTHORIZATION_HEADER = "Authorization";
@@ -33,13 +32,13 @@ public class JwtFilter extends OncePerRequestFilter {
     public JwtFilter(ElderlyRepository elderlyRepository, GuardianRepository guardianRepository, TokenProvider tokenProvider) {
         this.elderlyRepository = elderlyRepository;
         this.guardianRepository = guardianRepository;
-
         this.tokenProvider = tokenProvider;
     }
 
     // 실제 필터링 로직은 doFilterInternal 에 들어감
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("JwtFilter");
 
         // 1. Request Header 에서 토큰을 꺼냄
         String jwt = getToken(request);
@@ -49,11 +48,12 @@ public class JwtFilter extends OncePerRequestFilter {
             Claims payload = tokenProvider.getPayload(jwt);
 
             Member member = null;
-            var memberRole = payload.get("role",String.class);
+            var role = payload.get("role",String.class);
+            Role memberRole = Enum.valueOf(Role.class, role);
 
-            if (memberRole.equals(Role.ELDERLY.toString())) {
+            if (memberRole.equals(Role.ELDERLY)) {
                 member = elderlyRepository.findById(Integer.parseInt(payload.get("id").toString()));
-            }else if (memberRole.equals(Role.GURDIAN.toString())) {
+            }else if (memberRole.equals(Role.GURDIAN)) {
                 member = guardianRepository.findById(Integer.parseInt(payload.get("id").toString()));
             }
 
