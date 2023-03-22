@@ -58,7 +58,8 @@ public class NaverSmsService {
                 .retrieve()
                 .bodyToMono(SmsResponseDto.class)
                 .block();
-        if (!result.getStatusCode().equals("201")) {
+
+        if (!result.getStatusCode().equals("202")) {
             throw new RuntimeException("문자 전송 실패");
         }
 
