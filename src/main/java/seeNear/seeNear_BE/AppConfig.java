@@ -30,7 +30,7 @@ public class AppConfig implements WebMvcConfigurer {
     public FilterRegistrationBean<JwtFilter> JwtFilter(ElderlyRepository elderlyRepository, GuardianRepository guardianRepository,TokenProvider tokenProvider){
         FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new JwtFilter(elderlyRepository,guardianRepository,tokenProvider));
-        registrationBean.addUrlPatterns("/guardian/*","/elderly/*","/medicine/*");
+        registrationBean.addUrlPatterns("/guardian/*","/elderly/*","/medicine/*","/chat/*");
         registrationBean.setOrder(1);
         registrationBean.setName("first-filter");
         return registrationBean;
