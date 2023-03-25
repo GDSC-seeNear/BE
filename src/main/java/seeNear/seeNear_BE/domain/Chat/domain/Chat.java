@@ -27,4 +27,8 @@ public class Chat {
 
     private Timestamp createdAt;
     private boolean userSend;
+
+    public String getCreatedAt() {
+        return createdAt.toString();
+    }
 }
