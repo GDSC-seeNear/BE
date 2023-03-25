@@ -25,6 +25,6 @@ public class Chat {
 
     private String content;
 
-    private Timestamp created_at;
-    private boolean is_user_send;
+    private Timestamp createdAt;
+    private boolean userSend;
 }

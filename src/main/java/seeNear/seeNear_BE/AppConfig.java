@@ -1,10 +1,14 @@
 package seeNear.seeNear_BE;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import seeNear.seeNear_BE.domain.Chat.interceptor.HttpHandshakeInterceptor;
 import seeNear.seeNear_BE.global.common.Filter.RequestWrappingFilter;
 import seeNear.seeNear_BE.domain.Medicine.interceptor.IsPossibleMedicineCRUD;
 import seeNear.seeNear_BE.domain.Member.ElderlyRepository;
@@ -15,13 +19,15 @@ import seeNear.seeNear_BE.exception.GlobalExceptionHandlerFilter;
 
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
+    @Autowired
+    HttpHandshakeInterceptor httpHandshakeInterceptor;
 
     @Bean
     public FilterRegistrationBean<RequestWrappingFilter> RequestWrappingFilter(){
         FilterRegistrationBean<RequestWrappingFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new RequestWrappingFilter());
         registrationBean.addUrlPatterns("/medicine/*");
-        registrationBean.setOrder(2);
+        registrationBean.setOrder(3);
         registrationBean.setName("second-filter");
         return registrationBean;
     }
@@ -30,8 +36,8 @@ public class AppConfig implements WebMvcConfigurer {
     public FilterRegistrationBean<JwtFilter> JwtFilter(ElderlyRepository elderlyRepository, GuardianRepository guardianRepository,TokenProvider tokenProvider){
         FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new JwtFilter(elderlyRepository,guardianRepository,tokenProvider));
-        registrationBean.addUrlPatterns("/guardian/*","/elderly/*","/medicine/*","/chat/*");
-        registrationBean.setOrder(1);
+        registrationBean.addUrlPatterns("/guardian/*","/elderly/*","/medicine/*");
+        registrationBean.setOrder(2);
         registrationBean.setName("first-filter");
         return registrationBean;
     }
@@ -41,8 +47,8 @@ public class AppConfig implements WebMvcConfigurer {
         FilterRegistrationBean<GlobalExceptionHandlerFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new GlobalExceptionHandlerFilter());
         registrationBean.addUrlPatterns("/*");
-        //registrationBean.setOrder(1);
-        registrationBean.setName("first-filter");
+        registrationBean.setOrder(1);
+        registrationBean.setName("zero-filter");
         return registrationBean;
     }
 
@@ -51,11 +57,24 @@ public class AppConfig implements WebMvcConfigurer {
         return new IsPossibleMedicineCRUD();
     }
 
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(isPossibleMedicineCRUD())
                 .addPathPatterns("/medicine/**");
+    }
 
+    @Bean
+    @Lazy
+    public HttpHandshakeInterceptor httpHandshakeInterceptor(TokenProvider tokenProvider, ElderlyRepository elderlyRepository) {
+        return new HttpHandshakeInterceptor(tokenProvider,elderlyRepository);
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper ObjectMapper = new ObjectMapper();
+        // 원하는 설정
+        return ObjectMapper;
     }
 }
 
