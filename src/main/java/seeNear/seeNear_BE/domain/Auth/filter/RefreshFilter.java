@@ -43,7 +43,7 @@ public class RefreshFilter extends JwtFilter{
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 1. Request Header 에서 토큰을 꺼냄
-        String jwt = super.getToken(request);
+        String jwt = tokenProvider.getToken(request);
 
         // 2. validateToken 으로 토큰 유효성 검사
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {

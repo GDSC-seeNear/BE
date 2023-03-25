@@ -1,5 +1,6 @@
 package seeNear.seeNear_BE.domain.Medicine.interceptor;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -30,6 +31,8 @@ public class IsPossibleMedicineCRUD implements HandlerInterceptor {
     private ElderlyRepository elderlyRepository;
     @Autowired
     private MedicineRepository medicineRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public boolean validateUri(String requestUri) {
         Set<String> fixed = Set.of("create", "getByElderlyId", "update", "delete");
@@ -63,7 +66,7 @@ public class IsPossibleMedicineCRUD implements HandlerInterceptor {
             return null;
         }
 
-        ObjectMapper objectMapper = new ObjectMapper();
+//        ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(requestBody.toString(), classToChange);
     }
 
@@ -88,7 +91,7 @@ public class IsPossibleMedicineCRUD implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("IsPossibleMedicineCRUD");
+
 
         Role role = (Role) request.getAttribute("role");
         Member member = (Member) request.getAttribute("member");

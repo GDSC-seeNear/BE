@@ -22,9 +22,6 @@ import static seeNear.seeNear_BE.exception.ErrorCode.*;
 //@WebFilter(urlPatterns= {"/guardian/*","/elderly/*","/medicine/*"})
 public class JwtFilter extends OncePerRequestFilter {
 
-    static final String AUTHORIZATION_HEADER = "Authorization";
-    static final String BEARER_PREFIX = "Bearer ";
-
     final ElderlyRepository elderlyRepository;
     final GuardianRepository guardianRepository;
     final TokenProvider tokenProvider;
@@ -38,10 +35,10 @@ public class JwtFilter extends OncePerRequestFilter {
     // 실제 필터링 로직은 doFilterInternal 에 들어감
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("JwtFilter");
+
 
         // 1. Request Header 에서 토큰을 꺼냄
-        String jwt = getToken(request);
+        String jwt = tokenProvider.getToken(request);
 
         // 2. validateToken 으로 토큰 유효성 검사
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
@@ -69,12 +66,4 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    // Request Header 에서 토큰 정보를 꺼내오기
-    String getToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
-        }
-        throw new CustomException(HEADER_TOKEN_NOT_FOUND,bearerToken);
-    }
 }

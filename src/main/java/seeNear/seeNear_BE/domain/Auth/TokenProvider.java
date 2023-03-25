@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import seeNear.seeNear_BE.domain.Member.MemberEnum.Role;
 import seeNear.seeNear_BE.domain.Auth.dto.ResponseSignUpTokenDto;
 import seeNear.seeNear_BE.domain.Auth.dto.ResponseJwtTokenDto;
@@ -15,15 +16,20 @@ import seeNear.seeNear_BE.domain.Auth.Interface.AuthRepository;
 import seeNear.seeNear_BE.exception.CustomException;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
 
+import static seeNear.seeNear_BE.exception.ErrorCode.HEADER_TOKEN_NOT_FOUND;
 import static seeNear.seeNear_BE.exception.ErrorCode.INVALID_TOKEN;
 @Service
 public class TokenProvider {
+    static final String AUTHORIZATION_HEADER = "Authorization";
+    static final String BEARER_PREFIX = "Bearer ";
+
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
     private Key secret;
     @Value("${jwt.secret}")
@@ -116,5 +122,14 @@ public class TokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    // Request Header 에서 토큰 정보를 꺼내오기
+    public String getToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+            return bearerToken.substring(7);
+        }
+        throw new CustomException(HEADER_TOKEN_NOT_FOUND,bearerToken);
     }
 }
