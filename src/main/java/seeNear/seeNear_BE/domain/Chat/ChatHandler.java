@@ -14,6 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.messaging.Message;
 import seeNear.seeNear_BE.domain.Chat.dto.RequestChatDto;
+import seeNear.seeNear_BE.domain.Chat.dto.ResponseChatDto;
 
 
 @Slf4j
@@ -22,7 +23,7 @@ public class ChatHandler implements WebSocketHandler {
     private ChatService chatService;
 
     // CopyOnWriteArrayList,ConcurrentHashMap 스레드 안전한 리스트,해시 맵으로, 다중 스레드에서 안전하게 리스트에 접근할 수 있도록 해주기 때문
-    //private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
+    // private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
     private final Map<Integer,WebSocketSession> connectedUser = new ConcurrentHashMap<>();
 
     public ChatHandler(ObjectMapper objectMapper, ChatService chatService) {
@@ -30,12 +31,16 @@ public class ChatHandler implements WebSocketHandler {
         this.chatService = chatService;
     }
 
-
     //WebSocket 연결이 성립되면 세션을 리스트에 추가
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         int elderlyId = (int) session.getAttributes().get("elderlyId");
         connectedUser.put(elderlyId,session);
+        for (Map.Entry<Integer, WebSocketSession> entry : connectedUser.entrySet()) {
+            Integer key = entry.getKey();
+            WebSocketSession value = entry.getValue();
+            System.out.println("Key: " + key + ", Value: " + value);
+        }
     }
 
     public <T> T parseMessage(WebSocketMessage<?> message, Class<T> changeDto) throws IOException {
@@ -51,44 +56,28 @@ public class ChatHandler implements WebSocketHandler {
         }
         return changedDTO;
     }
-    //클라이언트로부터 수신한 메시지를 리스트에 있는 모든 세션에 전송
+    //클라이언트로부터 수신한 메시지에 답장
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         String payload = (String) message.getPayload();
         RequestChatDto requestChat = parseMessage(message, RequestChatDto.class);
         log.info("payload : {}", payload);
-        String responseChat = chatService.createResponseChat(requestChat);
-        session.sendMessage(new TextMessage(responseChat));
-    }
+        ResponseChatDto responseChat = chatService.createResponseChat(requestChat);
 
-    //chat을 유저에게 보내는 메소드
-    @MessageMapping("/chat/{roomId}")
-    public void handleChatMessage(WebSocketSession session,@DestinationVariable String roomId, WebSocketMessage<?> message) throws Exception {
-
-        RequestChatDto requestChat = parseMessage(message, RequestChatDto.class);
-        int elderlyId = requestChat.getElderlyId();
-        int tokenElderlyId = (int) session.getAttributes().get("elderlyId");
-        if(elderlyId != tokenElderlyId){
-            throw new Exception("토큰에 있는 elderlyId와 메시지에 있는 elderlyId가 다릅니다");
-        }
-        String responseChat = chatService.createResponseChat(requestChat);
-        session.sendMessage(new TextMessage(responseChat));
-
-//        List<WebSocketSession> sessions = chatRooms.getOrDefault(roomId, new CopyOnWriteArrayList<>());
-//        for (WebSocketSession session : sessions) {
-//            session.sendMessage(new TextMessage(chatMessage.getContent()));
-//        }
-
+        String jsonResponse = objectMapper.writeValueAsString(responseChat);
+        session.sendMessage(new TextMessage(jsonResponse));
     }
 
 
     //세션을 삭제
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-//        if (session.isOpen()) {
-//            session.close();
-//        }
-//        sessions.remove(session);
+        if (session.isOpen()) {
+            session.close();
+        }
+        int elderlyId = (int) session.getAttributes().get("elderlyId");
+        connectedUser.remove(elderlyId);
+        log.info("웹소켓 에러 비정상 종료");
     }
 
     @Override

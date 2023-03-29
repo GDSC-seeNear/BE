@@ -3,13 +3,14 @@ package seeNear.seeNear_BE.domain.Chat.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import seeNear.seeNear_BE.domain.NamedEntity.domain.NamedEntity;
+import seeNear.seeNear_BE.domain.StatusCheck.domain.Status;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +28,13 @@ public class Chat {
 
     private Timestamp createdAt;
     private boolean userSend;
+    private String type;
+
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Status> statuses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NamedEntity> namedEntities = new ArrayList<>();
 
     public String getCreatedAt() {
         return createdAt.toString();

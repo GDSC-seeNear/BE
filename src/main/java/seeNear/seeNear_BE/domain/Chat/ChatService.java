@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import seeNear.seeNear_BE.domain.Chat.domain.Chat;
 import seeNear.seeNear_BE.domain.Chat.dto.RequestChatDto;
+import seeNear.seeNear_BE.domain.Chat.dto.ResponseChatDto;
 import seeNear.seeNear_BE.domain.Chat.dto.ResponseChatListDto;
 
 import java.util.List;
@@ -30,20 +31,22 @@ public class ChatService {
         return new ResponseChatListDto(chatList);
     }
 
-    public String createResponseChat(RequestChatDto requestChatDto) {
+    public ResponseChatDto createResponseChat(RequestChatDto requestChatDto) {
         WebClient client = WebClient.create();
         System.out.println(requestChatDto);
-        String responseText = client.post()
+        ResponseChatDto responseText = client.post()
                 .uri(String.format("http://%s:%s",aiServerIp,aiServerPort))
                 .headers(headers -> {
                     headers.setContentType(MediaType.APPLICATION_JSON);
                 })
                 .bodyValue(requestChatDto)
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(ResponseChatDto.class)
                 .block();
+        System.out.println(responseText);
 
-        responseText = responseText == null ? "죄송합니다. 무슨 말인지 모르겠어요." : responseText;
+
+        responseText = responseText == null ? new ResponseChatDto("죄송합니다. 무슨 말인지 모르겠어요.") : responseText;
 
         return responseText;
     }

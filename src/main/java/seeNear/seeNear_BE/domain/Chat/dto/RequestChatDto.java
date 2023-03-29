@@ -12,4 +12,5 @@ public class RequestChatDto {
     int elderlyId;
     String content;
     boolean userSend;
+    String type;
 }

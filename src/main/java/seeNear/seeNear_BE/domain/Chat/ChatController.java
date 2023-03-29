@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import seeNear.seeNear_BE.domain.Chat.dto.RequestChatDto;
+import seeNear.seeNear_BE.domain.Chat.dto.ResponseChatDto;
 import seeNear.seeNear_BE.domain.Chat.dto.ResponseChatListDto;
 
 @RestController
@@ -17,15 +18,13 @@ public class ChatController {
 
     @GetMapping (value = "/getChatList/{elderlyId}")
     public ResponseChatListDto getChatList(@PathVariable int elderlyId) {
-        var a= chatService.getChatList(elderlyId);
-        System.out.println(a);
-        return a;
+        return chatService.getChatList(elderlyId);
     }
 
     @PostMapping (value = "/create")
-    public String createResponseChat(@RequestBody RequestChatDto requestChatDto) {
+    public ResponseChatDto createResponseChat(@RequestBody RequestChatDto requestChatDto) {
 
-        String responseText = chatService.createResponseChat(requestChatDto);
+        ResponseChatDto responseText = chatService.createResponseChat(requestChatDto);
 
         return responseText;
     }
