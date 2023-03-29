@@ -3,6 +3,8 @@ package seeNear.seeNear_BE.domain.Chat.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import seeNear.seeNear_BE.domain.NamedEntity.domain.NamedEntity;
 import seeNear.seeNear_BE.domain.StatusCheck.domain.Status;
 
@@ -15,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Chat {
 
@@ -25,7 +28,7 @@ public class Chat {
     private int elderlyId;
 
     private String content;
-
+    @CreatedDate
     private Timestamp createdAt;
     private boolean userSend;
     private String type;
@@ -35,6 +38,13 @@ public class Chat {
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NamedEntity> namedEntities = new ArrayList<>();
+
+    public Chat(int elderlyId, String content, boolean userSend, String type) {
+        this.elderlyId = elderlyId;
+        this.content = content;
+        this.userSend = userSend;
+        this.type = type;
+    }
 
     public String getCreatedAt() {
         return createdAt.toString();
