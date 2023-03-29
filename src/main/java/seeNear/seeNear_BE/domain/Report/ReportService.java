@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
-    private final ReportRepository reportRepository;
     private final ChatRepository chatRepository;
     private final NamedEntityRepository namedEntityRepository;
 
@@ -22,8 +21,7 @@ public class ReportService {
 
     private SentimentService sentimentService;
 
-    public ReportService(ReportRepository reportRepository, ChatRepository chatRepository, NamedEntityRepository namedEntityRepository, StatusCheckRepository statusCheckRepository, SentimentService sentimentService) {
-        this.reportRepository = reportRepository;
+    public ReportService(ChatRepository chatRepository, NamedEntityRepository namedEntityRepository, StatusCheckRepository statusCheckRepository, SentimentService sentimentService) {
         this.chatRepository = chatRepository;
         this.namedEntityRepository = namedEntityRepository;
         this.statusCheckRepository = statusCheckRepository;
@@ -31,11 +29,10 @@ public class ReportService {
     }
 
 
-
     public void getReportByDate(int elderlyId) {
 
     }
-    
+
     public List<Report> getReportAll(int elderlyId) {
         //유저가 채팅 사용한 전체 날 가져오기
         var date = chatRepository.getDistinctChatDates(elderlyId);
@@ -43,7 +40,7 @@ public class ReportService {
 
         List<Report> r = date.stream().map(d -> createReportByDate(elderlyId, d)).collect(Collectors.toList());
         return r;
-                //.forEach(reportRepository::save);
+        //.forEach(reportRepository::save);
     }
 
     public Report createReportByDate(int elderlyId, Date date) {
@@ -58,7 +55,7 @@ public class ReportService {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = formatter.format(date);
-        Report a =new Report(formattedDate, statusCheckResult, namedEntityResult,sentimentResult);
+        Report a = new Report(formattedDate, statusCheckResult, namedEntityResult, sentimentResult);
         return a;
 
     }
