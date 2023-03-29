@@ -1,8 +1,7 @@
 package seeNear.seeNear_BE.domain.StatusCheck;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import seeNear.seeNear_BE.domain.StatusCheck.Task.MealCheckTask;
+
 
 @Component
 public class StatusCheckScheduler {
