@@ -17,6 +17,11 @@ public class ChatRepository {
         this.em = em;
     }
 
+    public int save(Chat chat) {
+        em.persist(chat);
+        return chat.getId();
+    }
+
     public List<Chat> getChatListByelderlyId(int elderlyId) {
         return em.createQuery("select c from Chat c where c.elderlyId = :elderlyId", Chat.class)
                 .setParameter("elderlyId", elderlyId)

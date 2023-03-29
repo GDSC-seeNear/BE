@@ -56,4 +56,11 @@ public class ElderlyRepository {
         return newElderly;
     }
 
+    public List<Elderly> findAll() {
+        List<Elderly> elderly = em.createQuery("select e from Elderly e", Elderly.class)
+                .getResultList();
+
+        return elderly;
+    }
+
 }
