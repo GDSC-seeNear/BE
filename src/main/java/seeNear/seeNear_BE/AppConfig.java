@@ -1,6 +1,5 @@
 package seeNear.seeNear_BE;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -70,11 +69,11 @@ public class AppConfig implements WebMvcConfigurer {
         return new HttpHandshakeInterceptor(tokenProvider,elderlyRepository);
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper ObjectMapper = new ObjectMapper();
-        // 원하는 설정
-        return ObjectMapper;
-    }
+//    @Bean
+//    public ObjectMapper objectMapper() {
+//        ObjectMapper ObjectMapper = new ObjectMapper();
+//        // 원하는 설정
+//        return ObjectMapper;
+//    }
 }
 

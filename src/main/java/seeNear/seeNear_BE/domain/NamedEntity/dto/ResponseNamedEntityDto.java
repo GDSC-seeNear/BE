@@ -16,4 +16,8 @@ public class ResponseNamedEntityDto {
     private Timestamp createdAt;
     private String content;
 
+    public String getCreatedAt() {
+        return createdAt.toString();
+    }
+
 }

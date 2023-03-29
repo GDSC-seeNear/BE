@@ -1,6 +1,6 @@
 package seeNear.seeNear_BE.domain.Member.domain;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 public interface Member {

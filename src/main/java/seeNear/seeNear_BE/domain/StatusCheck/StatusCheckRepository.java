@@ -6,6 +6,7 @@ import seeNear.seeNear_BE.domain.StatusCheck.dto.RequestUpdateStatus;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -36,6 +37,16 @@ public class StatusCheckRepository {
             oldStatus.setDone(status.isDone());
             em.merge(oldStatus);
         }
+    }
+
+    public List<Status> getStatusByElderlyIdAndDate(int elderlyId, Date date) {
+        String jpql = "SELECT s FROM Status s JOIN s.chat c WHERE c.elderlyId = :elderlyId AND DATE(c.createdAt) = :date";
+        List<Status> statuses = em.createQuery(jpql, Status.class)
+                .setParameter("elderlyId", elderlyId)
+                .setParameter("date", date)
+                .getResultList();
+
+        return statuses;
     }
 
 }

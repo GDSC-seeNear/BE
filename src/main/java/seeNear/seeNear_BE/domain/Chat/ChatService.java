@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import seeNear.seeNear_BE.domain.Chat.domain.Chat;
+
 import seeNear.seeNear_BE.domain.Chat.dto.RequestChatDto;
 import seeNear.seeNear_BE.domain.Chat.dto.ResponseChatDto;
 import seeNear.seeNear_BE.domain.Chat.dto.ResponseChatListDto;
 
-import java.util.List;
 
 @Service
 public class ChatService {
@@ -26,8 +25,8 @@ public class ChatService {
 
 
     public ResponseChatListDto getChatList(int elderlyId) {
-        var chatList = chatRepository.getChatListByelderlyId(elderlyId);
-        System.out.println(chatList);
+        var chatList = chatRepository.getChatListByElderlyId(elderlyId);
+
         return new ResponseChatListDto(chatList);
     }
 

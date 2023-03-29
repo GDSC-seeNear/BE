@@ -8,7 +8,8 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -37,5 +38,9 @@ public class Elderly implements Member{
     public Elderly(String phoneNumber, String name) {
         this.phoneNumber = phoneNumber;
         this.name = name;
+    }
+
+    public String getBirth() {
+        return birth.toString();
     }
 }
