@@ -1,5 +1,6 @@
 package seeNear.seeNear_BE.domain.Chat.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 @Data
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@JsonIgnoreProperties({"statuses", "namedEntities"})
 public class Chat {
 
     @Id
