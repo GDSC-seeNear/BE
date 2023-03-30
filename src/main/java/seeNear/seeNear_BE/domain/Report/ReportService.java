@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import seeNear.seeNear_BE.domain.Chat.ChatRepository;
 import seeNear.seeNear_BE.domain.NamedEntity.NamedEntityRepository;
 import seeNear.seeNear_BE.domain.Report.domain.Report;
+import seeNear.seeNear_BE.domain.Report.dto.ResponseReportListDto;
 import seeNear.seeNear_BE.domain.Sentiment.SentimentService;
 import seeNear.seeNear_BE.domain.StatusCheck.StatusCheckRepository;
 
@@ -33,13 +34,13 @@ public class ReportService {
 
     }
 
-    public List<Report> getReportAll(int elderlyId) {
+    public ResponseReportListDto getReportAll(int elderlyId) {
         //유저가 채팅 사용한 전체 날 가져오기
         var date = chatRepository.getDistinctChatDates(elderlyId);
-        System.out.println(date);
 
         List<Report> r = date.stream().map(d -> createReportByDate(elderlyId, d)).collect(Collectors.toList());
-        return r;
+        return new ResponseReportListDto(r);
+
         //.forEach(reportRepository::save);
     }
 
