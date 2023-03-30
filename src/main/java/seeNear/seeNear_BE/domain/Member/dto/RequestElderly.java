@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -16,7 +17,7 @@ public class RequestElderly {
     private int id;
     private String phoneNumber;
     private String name;
-    private Date birth;
+    private LocalDate birth;
     private double addressLati;
     private double addressLongi;
     private String addressDetail;
