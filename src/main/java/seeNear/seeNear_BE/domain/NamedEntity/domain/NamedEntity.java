@@ -7,7 +7,8 @@ import lombok.ToString;
 import seeNear.seeNear_BE.domain.Chat.domain.Chat;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +24,7 @@ public class NamedEntity {
 
     private String target;
 
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

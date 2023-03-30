@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -12,7 +13,7 @@ public class ResponseChatDto {
     int id;
     int elderlyId;
     String content;
-    Timestamp createdAt;
+    LocalDateTime createdAt;
     boolean userSend;
     String type;
 

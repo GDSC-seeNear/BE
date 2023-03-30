@@ -11,7 +11,8 @@ import seeNear.seeNear_BE.domain.StatusCheck.domain.Status;
 
 import javax.persistence.*;
 
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class Chat {
 
     private String content;
     @CreatedDate
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
     private boolean userSend;
     private String type;
 

@@ -16,6 +16,9 @@ import seeNear.seeNear_BE.domain.Auth.TokenProvider;
 import seeNear.seeNear_BE.domain.Auth.filter.JwtFilter;
 import seeNear.seeNear_BE.exception.GlobalExceptionHandlerFilter;
 
+import java.time.Clock;
+import java.time.ZoneId;
+
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
     @Autowired
@@ -69,11 +72,10 @@ public class AppConfig implements WebMvcConfigurer {
         return new HttpHandshakeInterceptor(tokenProvider,elderlyRepository);
     }
 
-//    @Bean
-//    public ObjectMapper objectMapper() {
-//        ObjectMapper ObjectMapper = new ObjectMapper();
-//        // 원하는 설정
-//        return ObjectMapper;
-//    }
+    @Bean
+    public Clock clock() {
+        return Clock.system(ZoneId.of("Asia/Seoul"));
+    }
+
 }
 

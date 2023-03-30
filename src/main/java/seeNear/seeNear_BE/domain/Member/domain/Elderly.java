@@ -9,7 +9,7 @@ import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,7 +24,8 @@ public class Elderly implements Member{
 
     private String phoneNumber;
     private String name;
-    private Date birth;
+
+    private LocalDate birth;
     private double addressLati;
     private double addressLongi;
     private String addressDetail;

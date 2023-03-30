@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +14,7 @@ public class ResponseNamedEntityDto {
     private int id;
     private String type;
     private String target;
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
     private String content;
 
     public String getCreatedAt() {

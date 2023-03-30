@@ -1,6 +1,6 @@
 package seeNear.seeNear_BE.domain.Member.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface Member {
@@ -8,7 +8,8 @@ public interface Member {
 
     String phoneNumber = null;
     String name = null;
-    Date birth = null;
+
+    LocalDate birth = null;
     double addressLati = 0;
     double addressLongi = 0;
     String addressDetail = null;

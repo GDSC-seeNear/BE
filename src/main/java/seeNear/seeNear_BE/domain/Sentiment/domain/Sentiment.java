@@ -9,7 +9,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import seeNear.seeNear_BE.domain.Chat.domain.Chat;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +28,7 @@ public class Sentiment {
     @Column(name = "chat_id")
     private int chatId;
     @CreatedDate
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id", insertable = false, updatable = false)

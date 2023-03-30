@@ -18,4 +18,5 @@ public class  SeeNearBeApplication {
 		SpringApplication.run(SeeNearBeApplication.class, args);
 	}
 
+
 }
