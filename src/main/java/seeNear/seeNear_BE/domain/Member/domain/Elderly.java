@@ -42,6 +42,9 @@ public class Elderly implements Member{
     }
 
     public String getBirth() {
+        if (birth == null) {
+            return null;
+        }
         return birth.toString();
     }
 }

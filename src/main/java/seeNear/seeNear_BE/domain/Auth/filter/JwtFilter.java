@@ -40,18 +40,21 @@ public class JwtFilter extends OncePerRequestFilter {
         // 1. Request Header 에서 토큰을 꺼냄
         String jwt = tokenProvider.getToken(request);
 
+
         // 2. validateToken 으로 토큰 유효성 검사
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Claims payload = tokenProvider.getPayload(jwt);
 
             Member member = null;
+            System.out.println("member");
             var role = payload.get("role",String.class);
             Role memberRole = Enum.valueOf(Role.class, role);
 
+
             if (memberRole.equals(Role.ELDERLY)) {
-                member = elderlyRepository.findById(Integer.parseInt(payload.get("id").toString()));
+                member = elderlyRepository.findById((int)payload.get("id"));
             }else if (memberRole.equals(Role.GURDIAN)) {
-                member = guardianRepository.findById(Integer.parseInt(payload.get("id").toString()));
+                member = guardianRepository.findById((int)payload.get("id"));
             }
 
             if (member == null) {
